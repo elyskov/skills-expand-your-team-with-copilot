@@ -604,7 +604,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (copyShareButton) {
       copyShareButton.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(activityUrl);
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(activityUrl);
+          } else {
+            const tempInput = document.createElement("textarea");
+            tempInput.value = activityUrl;
+            tempInput.setAttribute("readonly", "");
+            tempInput.style.position = "absolute";
+            tempInput.style.left = "-9999px";
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+          }
           showMessage("Activity link copied. Share it with friends!", "success");
         } catch (error) {
           showMessage("Could not copy link. Please try again.", "error");
