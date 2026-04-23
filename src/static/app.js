@@ -43,8 +43,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+  const SCHOOL_NAME = "Mergington High School";
+  const SHARE_LEAD_TEXT = "Check out";
   const MAX_SHARE_TEXT_LENGTH = 220;
-  const SHARE_TEXT_TRUNCATION_LENGTH = 217;
+  const SHARE_TEXT_TRUNCATION_LENGTH = MAX_SHARE_TEXT_LENGTH - 3;
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -506,7 +508,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const normalizedSchedule = String(formattedSchedule || "")
       .replace(/\s+/g, " ")
       .trim();
-    const rawShareText = `Check out ${name} at Mergington High School! ${normalizedDescription} Schedule: ${normalizedSchedule}`;
+    const rawShareText = `${SHARE_LEAD_TEXT} ${name} at ${SCHOOL_NAME}! ${normalizedDescription} Schedule: ${normalizedSchedule}`;
     const shareText =
       rawShareText.length > MAX_SHARE_TEXT_LENGTH
         ? `${rawShareText
@@ -619,8 +621,11 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.appendChild(tempInput);
             tempInput.select();
             // Legacy clipboard fallback for older browsers and non-HTTPS contexts.
-            document.execCommand("copy");
+            const copySucceeded = document.execCommand("copy");
             document.body.removeChild(tempInput);
+            if (!copySucceeded) {
+              throw new Error("Legacy copy command failed");
+            }
           }
           showMessage("Activity link copied. Share it with friends!", "success");
         } catch (error) {
