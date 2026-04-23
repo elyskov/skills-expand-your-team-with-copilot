@@ -34,7 +34,7 @@ def init_database():
 initial_activities = {
     "Chess Club": {
         "description": "Learn strategies and compete in chess tournaments",
-        "difficulty": "Beginner",
+        "difficulty": "beginner",
         "schedule": "Mondays and Fridays, 3:15 PM - 4:45 PM",
         "schedule_details": {
             "days": ["Monday", "Friday"],
@@ -145,7 +145,7 @@ initial_activities = {
     },
     "Weekend Robotics Workshop": {
         "description": "Build and program robots in our state-of-the-art workshop",
-        "difficulty": "Advanced",
+        "difficulty": "advanced",
         "schedule": "Saturdays, 10:00 AM - 2:00 PM",
         "schedule_details": {
             "days": ["Saturday"],
@@ -157,7 +157,7 @@ initial_activities = {
     },
     "Science Olympiad": {
         "description": "Weekend science competition preparation for regional and state events",
-        "difficulty": "Intermediate",
+        "difficulty": "intermediate",
         "schedule": "Saturdays, 1:00 PM - 4:00 PM",
         "schedule_details": {
             "days": ["Saturday"],

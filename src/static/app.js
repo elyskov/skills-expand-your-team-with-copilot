@@ -314,6 +314,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return details.schedule;
   }
 
+  function formatDifficulty(difficulty) {
+    if (!difficulty) {
+      return "";
+    }
+    return difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  }
+
   // Function to determine activity type (this would ideally come from backend)
   function getActivityType(activityName, description) {
     const name = activityName.toLowerCase();
@@ -440,7 +447,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (details.difficulty) {
           return;
         }
-      } else if (details.difficulty !== currentDifficulty) {
+      } else if (
+        !details.difficulty ||
+        details.difficulty.toLowerCase() !== currentDifficulty
+      ) {
         return;
       }
 
@@ -525,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </span>
     `;
     const difficultyHtml = details.difficulty
-      ? `<p><strong>Difficulty:</strong> ${details.difficulty}</p>`
+      ? `<p><strong>Difficulty:</strong> ${formatDifficulty(details.difficulty)}</p>`
       : "";
 
     // Create capacity indicator
