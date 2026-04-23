@@ -498,7 +498,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const shareText = `Check out ${name} at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+    const normalizedDescription = String(details.description || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const normalizedSchedule = String(formattedSchedule || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const rawShareText = `Check out ${name} at Mergington High School! ${normalizedDescription} Schedule: ${normalizedSchedule}`;
+    const shareText =
+      rawShareText.length > 220
+        ? `${rawShareText.slice(0, 217).trimEnd()}...`
+        : rawShareText;
     const activityUrl = `${window.location.origin}${window.location.pathname}#activity-${encodeURIComponent(
       name
     )}`;
@@ -591,28 +601,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const whatsappShareButton = activityCard.querySelector(".share-whatsapp");
     const xShareButton = activityCard.querySelector(".share-x");
 
-    copyShareButton.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(activityUrl);
-        showMessage("Activity link copied. Share it with friends!", "success");
-      } catch (error) {
-        showMessage("Could not copy link. Please try again.", "error");
-      }
-    });
+    if (copyShareButton) {
+      copyShareButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(activityUrl);
+          showMessage("Activity link copied. Share it with friends!", "success");
+        } catch (error) {
+          showMessage("Could not copy link. Please try again.", "error");
+        }
+      });
+    }
 
-    whatsappShareButton.addEventListener("click", () => {
-      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-        `${shareText} ${activityUrl}`
-      )}`;
-      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-    });
+    if (whatsappShareButton) {
+      whatsappShareButton.addEventListener("click", () => {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+          `${shareText} ${activityUrl}`
+        )}`;
+        window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+      });
+    }
 
-    xShareButton.addEventListener("click", () => {
-      const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        shareText
-      )}&url=${encodeURIComponent(activityUrl)}`;
-      window.open(xUrl, "_blank", "noopener,noreferrer");
-    });
+    if (xShareButton) {
+      xShareButton.addEventListener("click", () => {
+        const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareText
+        )}&url=${encodeURIComponent(activityUrl)}`;
+        window.open(xUrl, "_blank", "noopener,noreferrer");
+      });
+    }
 
     // Add click handler for register button (only when authenticated)
     if (currentUser) {
