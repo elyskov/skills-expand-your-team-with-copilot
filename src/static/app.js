@@ -43,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
+  const MAX_SHARE_TEXT_LENGTH = 220;
+  const SHARE_TEXT_TRUNCATION_LENGTH = 217;
 
   // Time range mappings for the dropdown
   const timeRanges = {
@@ -506,8 +508,10 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
     const rawShareText = `Check out ${name} at Mergington High School! ${normalizedDescription} Schedule: ${normalizedSchedule}`;
     const shareText =
-      rawShareText.length > 220
-        ? `${rawShareText.slice(0, 217).trimEnd()}...`
+      rawShareText.length > MAX_SHARE_TEXT_LENGTH
+        ? `${rawShareText
+            .slice(0, SHARE_TEXT_TRUNCATION_LENGTH)
+            .trimEnd()}...`
         : rawShareText;
     const activityUrl = `${window.location.origin}${window.location.pathname}#activity-${encodeURIComponent(
       name
@@ -614,6 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tempInput.style.left = "-9999px";
             document.body.appendChild(tempInput);
             tempInput.select();
+            // Legacy clipboard fallback for older browsers and non-HTTPS contexts.
             document.execCommand("copy");
             document.body.removeChild(tempInput);
           }
