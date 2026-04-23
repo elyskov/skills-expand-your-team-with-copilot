@@ -498,6 +498,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
+    const shareText = `Check out ${name} at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
+    const activityUrl = `${window.location.origin}${window.location.pathname}#activity-${encodeURIComponent(
+      name
+    )}`;
 
     // Create activity tag
     const tagHtml = `
@@ -528,6 +532,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      <div class="activity-share-actions">
+        <button type="button" class="share-button share-copy">Copy Link</button>
+        <button type="button" class="share-button share-whatsapp">WhatsApp</button>
+        <button type="button" class="share-button share-x">X</button>
+      </div>
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
@@ -575,6 +584,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = activityCard.querySelectorAll(".delete-participant");
     deleteButtons.forEach((button) => {
       button.addEventListener("click", handleUnregister);
+    });
+
+    // Add click handlers for share buttons
+    const copyShareButton = activityCard.querySelector(".share-copy");
+    const whatsappShareButton = activityCard.querySelector(".share-whatsapp");
+    const xShareButton = activityCard.querySelector(".share-x");
+
+    copyShareButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(activityUrl);
+        showMessage("Activity link copied. Share it with friends!", "success");
+      } catch (error) {
+        showMessage("Could not copy link. Please try again.", "error");
+      }
+    });
+
+    whatsappShareButton.addEventListener("click", () => {
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+        `${shareText} ${activityUrl}`
+      )}`;
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    });
+
+    xShareButton.addEventListener("click", () => {
+      const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareText
+      )}&url=${encodeURIComponent(activityUrl)}`;
+      window.open(xUrl, "_blank", "noopener,noreferrer");
     });
 
     // Add click handler for register button (only when authenticated)
