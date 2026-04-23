@@ -43,7 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Authentication state
   let currentUser = null;
-  const SCHOOL_NAME = "Mergington High School";
+  const SCHOOL_NAME =
+    document.title.replace(/\s*Activities\s*$/i, "").trim() ||
+    "Mergington High School";
   const SHARE_LEAD_TEXT = "Check out";
   const MAX_SHARE_TEXT_LENGTH = 220;
   const SHARE_TEXT_TRUNCATION_LENGTH = MAX_SHARE_TEXT_LENGTH - 3;
@@ -515,9 +517,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .slice(0, SHARE_TEXT_TRUNCATION_LENGTH)
             .trimEnd()}...`
         : rawShareText;
-    const activityUrl = `${window.location.origin}${window.location.pathname}#activity-${encodeURIComponent(
-      name
-    )}`;
+    const activityUrl = `${window.location.origin}${window.location.pathname}`;
 
     // Create activity tag
     const tagHtml = `
@@ -645,7 +645,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (xShareButton) {
       xShareButton.addEventListener("click", () => {
-        const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        const xUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(
           shareText
         )}&url=${encodeURIComponent(activityUrl)}`;
         window.open(xUrl, "_blank", "noopener,noreferrer");
